@@ -3,6 +3,7 @@ using Entity;
 using Entity.Enemies;
 using Terrain;
 using Tools;
+using UnityEditor;
 using UnityEngine;
 
 namespace System
@@ -13,7 +14,21 @@ namespace System
         public Player player;
         public CameraController cameraController;
         public List<BaseMonster> monsters = new List<BaseMonster>();
+        public AudioSource audioSource;
+        public AudioClip bgmClip;
+        public AudioClip scoreClip;
+        private float score = 0.0f;
 
+        public float Score
+        {
+            get => score;
+            set
+            {
+                AudioSource.PlayClipAtPoint(scoreClip, Instance.transform.position);
+                score = value;
+            }
+        }
+        
         public float summonInterval = 1.0f;
         private float nowTime = 0.0f;
 
@@ -49,18 +64,30 @@ namespace System
                 Debug.LogError("Player reference not set in GameManager!");
             if (cameraController == null)
                 Debug.LogError("CameraController reference not set in GameManager!");
+            if (audioSource == null)
+                Debug.Log("No Audio Source");
 
+            audioSource.clip = bgmClip;
+            audioSource.loop = true;
+            audioSource.volume = 0.2f;
+            audioSource.Play();
+            player.gameObject.SetActive(false);
             monsters = new List<BaseMonster>(FindObjectsByType<BaseMonster>(FindObjectsSortMode.InstanceID));
+            Time.timeScale = 0.0f;
+            score = 0f;
+            PauseGame();
         }
 
         public void PauseGame()
         {
             IsGamePaused = true;
+            Time.timeScale = 0.0f;
         }
 
         public void ResumeGame()
         {
             IsGamePaused = false;
+            Time.timeScale = 1.0f;
         }
 
         public void TogglePause()
@@ -70,16 +97,25 @@ namespace System
 
         public void RestartGame()
         {
+            Time.timeScale = 1.0f;
+            score = 0.0f;
             if (player != null)
             {
+                player.gameObject.SetActive(true);
                 player.ResetPlayer();
-                foreach (var monster in monsters)
-                {
-                    MonsterPool.Instance.ReturnMonster(monster.gameObject);
-                }
+                MonsterPool.Instance.ReturnAllMonsters();
                 monsters.Clear();
             }
             ResumeGame();
+        }
+
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         private void Update()

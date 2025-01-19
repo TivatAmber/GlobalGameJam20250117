@@ -1,3 +1,4 @@
+using System;
 using Entity.Components;
 using Entity.Components.Data;
 using UnityEngine;
@@ -16,6 +17,9 @@ namespace Entity.Enemies
         protected CollisionEffect collisionEffect;
         protected ExecutionEffect executionEffect;
         protected bool shouldPlayDeathAnimation = false;
+        protected float score = 100.0f;
+
+        [SerializeField] protected AudioClip hitSound;
 
         public bool IsDead => health.IsDead;
 
@@ -32,6 +36,7 @@ namespace Entity.Enemies
                 return;
 
             health.TakeDamage(damage);
+            AudioSource.PlayClipAtPoint(hitSound, GameManager.Instance.transform.position);
 
             if (health.IsDead)
             {
@@ -55,12 +60,14 @@ namespace Entity.Enemies
 
         protected void Execute()
         {
+            GameManager.Instance.Score += score * 1.5f;
             collisionEffect.SetCanTrigger(false);
             executionEffect.Execute();
         }
 
         protected void NormalExecute()
         {
+            GameManager.Instance.Score += score;
             collisionEffect.SetCanTrigger(false);
             executionEffect.NormalKill();
         }

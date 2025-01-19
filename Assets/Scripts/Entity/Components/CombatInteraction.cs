@@ -82,7 +82,6 @@ namespace Entity.Components
                     orbitMovement.ToDirection(isLeft);
                     break;
                 case AttackResult.Fail:
-                    displacementHandler.TakeDamage(attackDamage);
                     break;
             }
         }
@@ -108,7 +107,6 @@ namespace Entity.Components
             {
                 // 1. 玩家紊乱
                 // 2. 怪攻击
-                displacementHandler.TakeDamage(attackDamage);
             }
         }
 
@@ -132,7 +130,6 @@ namespace Entity.Components
                         currentTarget.TakeHit(AttackResult.Normal);
                         break;
                     case AttackResult.Fail:
-                        displacementHandler.TakeDamage(attackDamage);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

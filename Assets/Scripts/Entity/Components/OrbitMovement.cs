@@ -66,6 +66,7 @@ namespace Entity.Components
 
         public void SetCurrentAngle(float value)
         {
+            isClockwise = true;
             startAngle = value * Mathf.Rad2Deg;
             currentAngle = startAngle;
         }

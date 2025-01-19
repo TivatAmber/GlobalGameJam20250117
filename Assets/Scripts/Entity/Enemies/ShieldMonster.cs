@@ -47,6 +47,8 @@ namespace Entity.Enemies
             if (health.IsDead || (hitResult != AttackResult.Perfect && hitResult != AttackResult.Normal &&
                                   hitResult != AttackResult.Puncture))
                 return;
+            
+            AudioSource.PlayClipAtPoint(hitSound, GameManager.Instance.transform.position);
             if (shieldEffect.State == ShieldState.Shield &&
                 hitResult is AttackResult.Perfect or AttackResult.Normal)
                 return;

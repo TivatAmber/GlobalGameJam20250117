@@ -20,6 +20,9 @@ namespace Entity.Components
         private CenterCircle centerCircle;
         private Coroutine recoveryCoroutine;
 
+        [SerializeField] private AudioClip soundEffect;
+        [SerializeField] private AudioClip jumpSoundEffect;
+
         [Header("Jump Settings")] 
         public float maxJumpTime = 0.2f;
         public float fallDuration = 1.0f;
@@ -46,6 +49,8 @@ namespace Entity.Components
         public bool IsDiving => isDiving;
         public bool CanJump => canJump;
         public bool CanDiving => canDiving;
+
+        public float ChaosValue => chaosValue;
 
         private void Start()
         {
@@ -209,6 +214,7 @@ namespace Entity.Components
         {
             float initialDistance = displacementDistance;
             float targetJumpHeight = maxJumpHeight;
+            AudioSource.PlayClipAtPoint(jumpSoundEffect, GameManager.Instance.transform.position);
     
             // 快速上升阶段
             float jumpTime = 0f;
@@ -241,6 +247,7 @@ namespace Entity.Components
         {
             float initialDistance = displacementDistance;
             float targetJumpHeight = maxJumpHeight;
+            AudioSource.PlayClipAtPoint(jumpSoundEffect, GameManager.Instance.transform.position);
     
             // 快速上升阶段
             float jumpTime = 0f;
@@ -306,11 +313,10 @@ namespace Entity.Components
         
         private void CheckDeath()
         {
-            Vector3 viewportPosition = Camera.main.WorldToViewportPoint(transform.position);
-            if (viewportPosition.x < 0 || viewportPosition.x > 1 ||
-                viewportPosition.y < 0 || viewportPosition.y > 1)
+            if (Vector3.Distance(centerCircle.center, transform.position) > centerCircle.dieRadius && ChaosValue >= 100)
             {
                 Die();
+                GameManager.Instance.PauseGame();
             }
         }
 
@@ -332,6 +338,12 @@ namespace Entity.Components
             StopAllCoroutines();
             recoveryCoroutine = null;
             transform.position = originalPosition;
+        }
+        
+        public void PlaySound()
+        {
+            // 最简单的播放方式，不需要AudioSource组件
+            AudioSource.PlayClipAtPoint(soundEffect, GameManager.Instance.transform.position);
         }
     }
 }

@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  spriteRenderer: {fileID: 0}
   changeInterval: 2
   nowTime: 0
 --- !u!114 &5429350084255952423
@@ -225,6 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98fc705233ab401cbc47bbda6fee12ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitSound: {fileID: 8300000, guid: 4c5b4c06ad8b48a45a30120531707133, type: 3}
 --- !u!50 &4314127776830775065
 Rigidbody2D:
   serializedVersion: 5

@@ -5,9 +5,11 @@ using UnityEngine;
 
 namespace Entity.Components.ShieldMonsterComponents
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class ShieldEffect: MonoBehaviour
     {
         [SerializeField] [ReadOnly] private ShieldState state;
+        [SerializeField] private SpriteRenderer spriteRenderer;
         public float changeInterval = 1.0f;
 
         [SerializeField] [ReadOnly] private float nowTime = 0.0f;
@@ -18,6 +20,8 @@ namespace Entity.Components.ShieldMonsterComponents
         {
             nowTime = 0.0f;
             state = ShieldState.Idle;
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.color = Color.white;
         }
 
         private void Update()
@@ -26,8 +30,16 @@ namespace Entity.Components.ShieldMonsterComponents
             if (nowTime >= changeInterval)
             {
                 nowTime = 0.0f;
-                if (state == ShieldState.Idle) state = ShieldState.Shield;
-                else if (state == ShieldState.Shield) state = ShieldState.Idle;
+                if (state == ShieldState.Idle)
+                {
+                    state = ShieldState.Shield;
+                    spriteRenderer.color = Color.yellow;
+                }
+                else if (state == ShieldState.Shield)
+                {
+                    state = ShieldState.Idle;
+                    spriteRenderer.color = Color.white;
+                }
             }
         }
 
@@ -35,6 +47,7 @@ namespace Entity.Components.ShieldMonsterComponents
         {
             nowTime = 0.0f;
             state = ShieldState.Idle;
+            spriteRenderer.color = Color.white;
         }
     }
 }

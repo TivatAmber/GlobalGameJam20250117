@@ -67,7 +67,7 @@ namespace Entity.Components
 
         public void Reset()
         {
-            isClockwise = false;
+            isClockwise = true;
             UpdateTangentDirection();
         }
 
